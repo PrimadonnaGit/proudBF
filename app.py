@@ -27,7 +27,7 @@ def getData():
         "data" : data
     })
 
-@app.route('/')
+@app.route('/seoulbitz')
 def index():
     return render_template('index.html')
 
