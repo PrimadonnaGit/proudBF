@@ -17,7 +17,14 @@ def load_csv(filename):
     with open(filename, encoding='utf-8') as f:
         reader = csv.reader(f)
         for r in reader:
-            data.append({'title': r[1], 'addr': r[3]})
+            data.append({
+                'title': r[1],
+                'addr_s': r[2], 
+                'addr': r[3],
+                'like': r[4],
+                'insta': r[5],
+                'img': r[6]
+                })
     return data
 
 @app.route('/getData', methods= ['POST'])

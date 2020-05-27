@@ -10,10 +10,56 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous"></script>
     <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=cc116147fce20da7314166dce21f0305&libraries=services"></script>
     <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=cc116147fce20da7314166dce21f0305"></script>
+    <!-- custom css -->
+    <link href="/static/css/seoulbitz.css"  rel="stylesheet" type="text/css" /> 
+
 </head>
 <body>
+<!-- Page Content -->
+  <div class="container">
 
-    <div id="map" style="width:100%;height:900px;"></div>
+    <!-- Page Heading/Breadcrumbs -->
+    <h1 class="mt-4 mb-3">SeoulBitz Project
+      <!-- <small>- Lovely boyfriend</small> -->
+    </h1>
+
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item">
+        <a href="#">Home</a>
+      </li>
+      <!-- <li class="breadcrumb-item active">About</li> -->
+    </ol>
+
+    <!-- Content Row -->
+    <div class="row">
+      <!-- Sidebar Column -->
+      <div class="col-lg-2 mb-4">
+        <div class="list-group">
+          <a href="#" class="list-group-item active">Home</a>
+          <a href="#" class="list-group-item">About</a>
+          <a href="#" class="list-group-item">Sidebar</a>
+          <div>
+            <p style="font-size: 12px;margin-left: 7px;margin-top: 5px;">지도를 클릭하면 초기화됩니다 ^,^</p>
+          </div>
+        </div>
+      </div>
+      <!-- Content Column -->
+      <div class="col-lg-10 mb-4">
+        <div id="map" style="width:100%;height:600px;"></div>
+      </div>
+    </div>
+    <!-- /.row -->
+  </div>
+  <!-- /.container -->
+
+  <!-- Footer -->
+  <footer class="py-5 bg-dark">
+    <div class="container">
+      <p class="m-0 text-center text-white">Copyright &copy; Primadonna 2020</p>
+    </div>
+    <!-- /.container -->
+  </footer>
+</body>
 
 <script>
     // 마커 이미지
@@ -24,7 +70,36 @@
         mapOption = {
             center: new kakao.maps.LatLng(37.5065591, 127.018721), // 지도의 중심좌표
             level: 5 // 지도의 확대 레벨
-        };  
+        };
+
+    // 인포윈도우를 표시하는 클로저를 만드는 함수입니다 
+    function makeOverListener(map, marker, infowindow) {
+        return function() {
+            infowindow.open(map, marker);
+        };
+    }
+
+    // 인포윈도우를 닫는 클로저를 만드는 함수입니다 
+    function makeOutListener(infowindow) {
+        return function() {
+            infowindow.close();
+        };
+    }
+
+    // 인포윈도우 내용 작성 함수
+    function makeInfoWindowContent(data) {
+        var content = '<a style="text-decoration:none;" href="'+ data.insta + '" target="_blank">';
+        content += '    <div style="border:none;width:300px;height:400px"class="info">';
+        content += '    <strong style="line-height:50px;font-size: 20px;margin-left: 5px;">'+ data.title +'</strong>';
+        content += '    <div class="desc">';
+        content += '        <img style="width:300px;height:300px" src="'+ data.img + '" alt="">';
+        content += '    </div>';
+        content += '    <span style="margin-left:5px; class="address">위치 : ' + data.addr +'</span><br>';
+        content += '    <span style="margin-left:5px; "class="like">좋아요 : ' + data.like +'</span>';
+        content += '    </div>';
+        content += '</a>';
+        return content;
+    }
 
     // 지도를 생성합니다    
     var map = new kakao.maps.Map(mapContainer, mapOption); 
@@ -58,9 +133,30 @@
                 var marker = new kakao.maps.Marker({
                     map: map, // 마커를 표시할 지도
                     position:  new kakao.maps.LatLng(result[0].y, result[0].x), // 마커를 표시할 위치
-                    title : data.name, // 마커의 타이틀, 마커에 마우스를 올리면 타이틀이 표시됩니다
-                    image : markerImage // 마커 이미지 
+                    image : markerImage, // 마커 이미지
+                    clickable: true // 마커를 클릭했을 때 지도의 클릭 이벤트가 발생하지 않도록 설정합니다
                 });
+
+                // 마커에 표시할 인포윈도우를 생성합니다 
+                var infowindow = new kakao.maps.InfoWindow({
+                    content: makeInfoWindowContent(data) // 인포윈도우에 표시할 내용
+                });
+
+                // 마커에 mouseover 이벤트와 mouseout 이벤트를 등록합니다
+                // 이벤트 리스너로는 클로저를 만들어 등록합니다 
+                // for문에서 클로저를 만들어 주지 않으면 마지막 마커에만 이벤트가 등록됩니다
+                // kakao.maps.event.addListener(marker, 'mouseover', makeOverListener(map, marker, infowindow));
+                // kakao.maps.event.addListener(marker, 'mouseout', makeOutListener(infowindow));
+                // 마커에 클릭이벤트를 등록합니다
+                kakao.maps.event.addListener(marker, 'click', function() {
+                    // 마커 위에 인포윈도우를 표시합니다
+                    infowindow.open(map, marker);  
+                });
+
+                kakao.maps.event.addListener(map, 'click', function() {
+                    // 마커 위에 인포윈도우를 표시합니다
+                    infowindow.close();  
+                });            
             } 
         })
     }
