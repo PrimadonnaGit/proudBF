@@ -45,7 +45,7 @@
       </div>
       <!-- Content Column -->
       <div class="col-lg-10 mb-4">
-        <div id="map" style="width:100%;height:600px;"></div>
+        <div id="map" style="width:100%;height:800px;"></div>
       </div>
     </div>
     <!-- /.row -->
@@ -88,17 +88,23 @@
 
     // 인포윈도우 내용 작성 함수
     function makeInfoWindowContent(data) {
-        var content = '<a style="text-decoration:none;" href="'+ data.insta + '" target="_blank">';
-        content += '    <div style="border:none;width:300px;height:400px"class="info">';
-        content += '    <strong style="line-height:50px;font-size: 20px;margin-left: 5px;">'+ data.title +'</strong>';
-        content += '    <div class="desc">';
-        content += '        <img style="width:300px;height:300px" src="'+ data.img + '" alt="">';
-        content += '    </div>';
-        content += '    <span style="margin-left:5px; class="address">위치 : ' + data.addr +'</span><br>';
-        content += '    <span style="margin-left:5px; "class="like">좋아요 : ' + data.like +'</span>';
-        content += '    </div>';
-        content += '</a>';
+        // var content = '<a style="text-decoration:none;" href="'+ data.insta + '" target="_blank">';
+        // content += '    <div style="border:none;width:300px;height:400px"class="info">';
+        // content += '    <strong style="line-height:50px;font-size: 20px;margin-left: 5px;">'+ data.title +'</strong>';
+        // content += '    <div class="desc">';
+        // content += '        <img style="width:300px;height:300px" src="'+ data.img + '" alt="">';
+        // content += '    </div>';
+        // content += '    <span style="margin-left:5px; class="address">위치 : ' + data.addr +'</span><br>';
+        // content += '    <span style="margin-left:5px; "class="like">좋아요 : ' + data.like +'</span>';
+        // content += '    </div>';
+        // content += '</a>';
+
+        var content = '<iframe src="'+ data.insta + 'embed" width="300" height="500" frameborder="0" scrolling="no" allowtransparency="true"></iframe>'
+
+
         return content;
+
+        
     }
 
     // 지도를 생성합니다    
