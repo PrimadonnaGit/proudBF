@@ -1,14 +1,29 @@
-.container {
-    max-width: 1540px;
+@supports (-webkit-touch-callout: none) {
+/* CSS specific to iOS devices */
+	#map {
+		width: 100%;
+		height: 1500px;
+	}	
+		
 }
 
-#map {
-    width : 100%;
-    height : 800px;
+@supports not (-webkit-touch-callout: none) {
+/* CSS for other than iOS devices */ 
+
+	.container {
+		max-width: 1540px;
+    	}
+
+    	#map {
+		width : 100%;
+		height : 1540px;
+	}
+
+	p {
+		font-size: 12px;
+		margin-left: 7px;
+		margin-top: 5px;
+	}
 }
 
-p {
-    font-size: 12px;
-    margin-left: 7px;
-    margin-top: 5px;
-}
+
