@@ -47,9 +47,6 @@
 					<a href="#" class="list-group-item active">Home</a>
 					<a href="#" class="list-group-item">About</a>
 					<a href="#" class="list-group-item">Sidebar</a>
-					<div>
-						<p>지도를 클릭하면 초기화됩니다 ^,^</p>
-					</div>
 				</div>
 			</div>
 			<!-- Content Column -->
@@ -149,8 +146,6 @@
 
 				// 마커에 클릭이벤트 등록
 				kakao.maps.event.addListener(marker, 'click', function () {
-					// 이미 열려있는 것이 있다면 닫음
-					infowindow.close();
 					// 마커 위에 인포윈도우를 표시합니다
 					infowindow.open(map, marker);
 				});
