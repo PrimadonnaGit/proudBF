@@ -27,7 +27,7 @@ def load_csv(filename):
                 })
     return data
 
-@app.route('/getData', methods= ['POST'])
+@app.route('/api/getData', methods= ['POST'])
 def getData():
     data = load_csv('static/seoulbitz(05_26).csv')
     return jsonify({
