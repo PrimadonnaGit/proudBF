@@ -101,7 +101,6 @@ function makeInfoWindowContent(insta) {
     if (isMobile()) { 
         iframeWidth = "600";
         iframeHeight = "800"
-        
     }
 
     var content = '<iframe src="' + insta + 'embed" width="'+ iframeWidth +'" height="'+ iframeHeight + '" frameborder="0" scrolling="no" allowtransparency="true"></iframe>'
@@ -109,6 +108,12 @@ function makeInfoWindowContent(insta) {
 }
 
 function init(centerLoc) {
+    if (isMobile()) {
+        alert("모바일");
+    }
+    else {
+        alert("PC");
+    }
     // 마커를 생성합니다
     var marker = new kakao.maps.Marker({
         map: map, // 마커를 표시할 지도
