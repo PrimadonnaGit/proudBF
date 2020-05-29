@@ -89,7 +89,18 @@ function closeInfoWindow(array) {
 
 // 인포윈도우 내용 작성 함수
 function makeInfoWindowContent(insta) {
-    var content = '<iframe src="' + insta + 'embed" width="300" height="500" frameborder="0" scrolling="no" allowtransparency="true"></iframe>'
+
+    var mq = window.matchMedia("(only screen and (min-device-width: 375px) and (max-device-width: 812px) and (-webkit-min-device-pixel-ratio: 3))")
+    var iframeWidth = 300
+    var iframeHeight = 500
+
+    if (mq.matches) {
+        iframeWidth = 500
+        iframeHeight = 700
+        
+    }
+    
+    var content = '<iframe src="' + insta + 'embed" width="'+ iframeWidth +'" height="'+ iframeHeight + '" frameborder="0" scrolling="no" allowtransparency="true"></iframe>'
     return content;
 }
 

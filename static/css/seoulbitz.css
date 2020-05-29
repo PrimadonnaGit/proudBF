@@ -89,17 +89,13 @@
 @media only screen and (min-device-width: 375px) and (max-device-width: 812px) and (-webkit-min-device-pixel-ratio: 3) {
 
     .container {
-        max-width: 480px;
-        }
-    
-        #map {
-        width : 100%;
-        height : 500px;
+        max-width: 960px;
     }
     
-    p {
-        font-size: 12px;
-        margin-left: 7px;
-        margin-top: 5px;
-    } 
+    #map {
+        width : 100%;
+        height : 1200px;
+    }
+    
+
 }
