@@ -14,12 +14,23 @@
         width : 100%;
         height : 900px;
     }
-    
-    p {
-        font-size: 12px;
-        margin-left: 7px;
-        margin-top: 5px;
-    }    
+
+    .searchbar {
+        margin : 10px;
+    }
+
+    .search_input {
+        border: none;
+        border-bottom: 2px solid yellowgreen;
+    }
+
+    .search_input:focus {
+        outline: none;
+        border: none;
+        border-bottom: 2px solid yellowgreen;
+    }
+
+
 }
     
 /*
@@ -30,9 +41,14 @@
 */
     
 @media (min-width: 1025px) and (max-width: 1280px) {
+    .container {
+        max-width: 1540px;
+        }
     
-
-
+        #map {
+        width : 100%;
+        height : 900px;
+    }
 }
 
 /*
@@ -43,9 +59,14 @@
 */
 
 @media (min-width: 768px) and (max-width: 1024px) {
-
-
-
+    .container {
+        max-width: 1540px;
+        }
+    
+        #map {
+        width : 100%;
+        height : 900px;
+    }
 }
 
 /*
@@ -56,9 +77,14 @@
 */
 
 @media (min-width: 768px) and (max-width: 1024px) and (orientation: landscape) {
-
-
-
+    .container {
+        max-width: 1540px;
+        }
+    
+        #map {
+        width : 100%;
+        height : 900px;
+    }
 }
 
 /*
@@ -69,9 +95,14 @@
 */
 
 @media (min-width: 481px) and (max-width: 767px) {
-
-
-
+    .container {
+        max-width: 1540px;
+        }
+    
+        #map {
+        width : 100%;
+        height : 900px;
+    }
 }
 
 /*

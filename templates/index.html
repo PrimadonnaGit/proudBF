@@ -22,9 +22,9 @@
 	<script type="text/javascript"
 		src="//dapi.kakao.com/v2/maps/sdk.js?appkey=cc116147fce20da7314166dce21f0305&libraries=services,clusterer"></script>
 		
-	<!-- custom css -->
-	<link href="/static/css/seoulbitz.css" rel="stylesheet" type="text/css" />
-
+	<!-- custom js/css -->
+	<link href="/static/css/seoulbitz.css?v=052900" rel="stylesheet" type="text/css" />
+	
 </head>
 
 <body>
@@ -52,6 +52,11 @@
 					<a href="#" class="list-group-item">About</a>
 					<a href="#" class="list-group-item">Sidebar</a>
 				</div>
+				<div id="subwaySearch">
+					<div class="searchbar">
+						<input class="search_input" type="text" name="" placeholder="지하철역 검색" onchange="subwaySearch(this.value);">
+					  </div>
+				</div>
 			</div>
 			<!-- Content Column -->
 			<div class="col-lg-10 mb-4">
@@ -71,8 +76,7 @@
 	</footer>
 </body>
 <!-- js -->
-<script type="text/javascript" src="/static/js/seoulbitz.js"></script>
-
+<script type="text/javascript" src="/static/js/seoulbitz.js?v=052900"></script>
 <script>
 init(centerLoc);
 </script>
