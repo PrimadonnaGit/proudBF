@@ -82,7 +82,14 @@
 */
 
 @media (min-width: 320px) and (max-width: 480px) {
-
+    .container {
+        max-width: 960px;
+    }
+    
+    #map {
+        width : 100%;
+        height : 1200px;
+    }
 }
 
 /* Portrait and Landscape */
