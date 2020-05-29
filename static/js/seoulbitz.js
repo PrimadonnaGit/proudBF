@@ -87,23 +87,21 @@ function closeInfoWindow(array) {
     }
 }
 
+// 모바일 기기 체크
+function isMobile() {
+    return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+}
+
 // 인포윈도우 내용 작성 함수
 function makeInfoWindowContent(insta) {
 
     var iframeWidth = "300";
     var iframeHeight = "500"
-    var filter = "win16|win32|win64|mac|macintel"; 
-    
-    if ( navigator.platform ) { 
-        if ( filter.indexOf( navigator.platform.toLowerCase() ) < 0 ) { 
-            alert('mobile 접속'); 
-            iframeWidth = "500";
-            iframeHeight = "700"
-        } 
-        else { 
-           alert('pc 접속'); 
 
-        } 
+    if (isMobile()) { 
+        iframeWidth = "500";
+        iframeHeight = "700"
+        
     }
 
     var content = '<iframe src="' + insta + 'embed" width="'+ iframeWidth +'" height="'+ iframeHeight + '" frameborder="0" scrolling="no" allowtransparency="true"></iframe>'
