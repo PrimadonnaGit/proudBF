@@ -10,7 +10,7 @@
         max-width: 1540px;
         }
     
-        #map {
+    #map {
         width : 100%;
         height : 900px;
     }
@@ -148,6 +148,26 @@
         width : 100%;
         height : 1200px;
     }
+    
+    .list-group {
+        display:none;
+    }
+    
+    .searchbar {
+        margin : 10px;
+    }
+
+    .search_input {
+        border: none;
+        border-bottom: 2px solid yellowgreen;
+    }
+
+    .search_input:focus {
+        outline: none;
+        border: none;
+        border-bottom: 2px solid yellowgreen;
+    }
+
 
 }
 
