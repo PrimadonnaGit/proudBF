@@ -109,10 +109,10 @@ function makeInfoWindowContent(insta) {
 
 function init(centerLoc) {
     if (isMobile()) {
-        alert("모바일");
+        console.log("모바일");
     }
     else {
-        alert("PC");
+        console.log("PC");
     }
     // 마커를 생성합니다
     var marker = new kakao.maps.Marker({
