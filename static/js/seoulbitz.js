@@ -99,8 +99,8 @@ function makeInfoWindowContent(insta) {
     var iframeHeight = "500"
 
     if (isMobile()) { 
-        iframeWidth = "500";
-        iframeHeight = "700"
+        iframeWidth = "600";
+        iframeHeight = "800"
         
     }
 
