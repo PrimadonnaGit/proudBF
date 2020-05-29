@@ -90,16 +90,22 @@ function closeInfoWindow(array) {
 // 인포윈도우 내용 작성 함수
 function makeInfoWindowContent(insta) {
 
-    var mq = window.matchMedia("(only screen and (min-device-width: 375px) and (max-device-width: 812px) and (-webkit-min-device-pixel-ratio: 3))")
-    var iframeWidth = 300
-    var iframeHeight = 500
-
-    if (mq.matches) {
-        iframeWidth = 500
-        iframeHeight = 700
-        
-    }
+    var iframeWidth = "300";
+    var iframeHeight = "500"
+    var filter = "win16|win32|win64|mac|macintel"; 
     
+    if ( navigator.platform ) { 
+        if ( filter.indexOf( navigator.platform.toLowerCase() ) < 0 ) { 
+            alert('mobile 접속'); 
+            iframeWidth = "500";
+            iframeHeight = "700"
+        } 
+        else { 
+           alert('pc 접속'); 
+
+        } 
+    }
+
     var content = '<iframe src="' + insta + 'embed" width="'+ iframeWidth +'" height="'+ iframeHeight + '" frameborder="0" scrolling="no" allowtransparency="true"></iframe>'
     return content;
 }
