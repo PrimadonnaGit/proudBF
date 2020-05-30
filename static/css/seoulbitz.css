@@ -277,5 +277,17 @@
         border-bottom: 2px solid yellowgreen;
     }
 
+    #insta-embed {
+        text-align: center;
+    }
+
+    input {
+        background-color: whitesmoke;
+    }
+
+    .empty-div {
+        min-height: 1px;
+    }
+
 
 }
