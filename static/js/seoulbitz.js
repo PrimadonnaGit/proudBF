@@ -42,30 +42,24 @@ $.get("/static/seoulbitz.json", function(data){
             clickable: true // 마커를 클릭했을 때 지도의 클릭 이벤트가 발생하지 않도록 설정합니다
         });
         
-        // 마커에 표시할 인포윈도우를 생성합니다 
-        var infowindow = new kakao.maps.InfoWindow({
-            content: makeInfoWindowContent(d.insta) // 인포윈도우에 표시할 내용
-        });
-
-        infowindowArray.push(infowindow);
-
         // 마커에 클릭이벤트 등록
         kakao.maps.event.addListener(marker, 'click', function () {
-            closeInfoWindow(infowindowArray);
-            // 마커 위에 인포윈도우를 표시합니다
-            infowindow.open(map, marker);
+            var content = makeInfoWindowContent(d.insta);
+            var insta_embed = document.getElementById('insta-embed');
+            while (insta_embed.firstChild) insta_embed.removeChild(insta_embed.firstChild);
+            insta_embed.append(content);
+
         });
 
-        // 맵에 클릭이벤트 등록
-        kakao.maps.event.addListener(map, 'click', function () {
-            // 인포윈도우를 초기화
-            infowindow.close();
-        });
         return marker
     });
     
     clusterer.addMarkers(markers)
 })
+
+function iframeOnload(){
+    fullpage_api.moveTo(3);
+}
 
 // 인포윈도우를 표시하는 클로저를 만드는 함수입니다 
 function makeOverListener(map, marker, infowindow) {
@@ -96,16 +90,23 @@ function isMobile() {
 // 인포윈도우 내용 작성 함수
 function makeInfoWindowContent(insta) {
 
-    var iframeWidth = "300";
-    var iframeHeight = "500"
+    var iframeWidth = "600";
+    var iframeHeight = "800"
 
     if (isMobile()) { 
         iframeWidth = "600";
         iframeHeight = "800"
     }
 
-    var content = '<iframe src="' + insta + 'embed" width="'+ iframeWidth +'" height="'+ iframeHeight + '" frameborder="0" scrolling="no" allowtransparency="true"></iframe>'
-    return content;
+    var link = insta + 'embed';
+    var iframe = document.createElement('iframe');
+    iframe.frameBorder = 0;
+    iframe.width= iframeWidth;
+    iframe.height = iframeHeight;
+    iframe.setAttribute("src", link);
+    iframe.onload = iframeOnload;
+
+    return iframe;
 }
 
 function panTo(moveLatLon) {   
@@ -115,13 +116,6 @@ function panTo(moveLatLon) {
 }     
 
 function init(centerLoc) {
-    // if (isMobile()) {
-    //     console.log("모바일");
-    // }
-    // else {
-    //     console.log("PC");
-    // }
-
     // 마커를 생성합니다
     var marker = new kakao.maps.Marker({
         position: centerLoc, // 마커를 표시할 위치
@@ -146,6 +140,7 @@ function subwaySearch(query) {
                 var centerLoc = new kakao.maps.LatLng(data.DATA[i].xpoint_wgs, data.DATA[i].ypoint_wgs);
                 panTo(centerLoc);
                 init(centerLoc);
+                fullpage_api.moveTo(2);
             }
         })
     });

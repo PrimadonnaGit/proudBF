@@ -22,12 +22,25 @@
     .search_input {
         border: none;
         border-bottom: 2px solid yellowgreen;
+        
     }
 
     .search_input:focus {
         outline: none;
         border: none;
         border-bottom: 2px solid yellowgreen;
+    }
+
+    #insta-embed {
+        text-align: center;
+    }
+
+    input {
+        background-color: whitesmoke;
+    }
+
+    .empty-div {
+        min-height: 1px;
     }
 
 
