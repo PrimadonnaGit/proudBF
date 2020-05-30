@@ -94,8 +94,8 @@ function makeInfoWindowContent(insta) {
     var iframeHeight = "800"
 
     if (isMobile()) { 
-        iframeWidth = "600";
-        iframeHeight = "800"
+        iframeWidth = "350";
+        iframeHeight = "405"
     }
 
     var link = insta + 'embed';
