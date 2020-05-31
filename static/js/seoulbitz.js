@@ -146,6 +146,18 @@ function subwaySearch(query) {
     });
 }
 
+function wrapWindowByMask(){
+    //화면의 높이와 너비를 구한다.
+    var maskHeight = $('.section-map').height();  
+    var maskWidth = $('.section-map').width();  
+    
+    //마스크의 높이와 너비를 화면 것으로 만들어 전체 화면을 채운다.
+    $('#mask').css({'width':maskWidth,'height':maskHeight});  
+    
+    //애니메이션 효과
+    $('#mask').fadeTo('fast',0.8);
+
+}
 
 //주소로 좌표 검색
 var addressSearch = function (data) {

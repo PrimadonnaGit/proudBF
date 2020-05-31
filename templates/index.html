@@ -24,7 +24,7 @@
 		src="//dapi.kakao.com/v2/maps/sdk.js?appkey=cc116147fce20da7314166dce21f0305&libraries=services,clusterer"></script>
 		
 	<!-- custom js/css -->
-	<link href="/static/css/seoulbitz.css?v=053001" rel="stylesheet" type="text/css" />
+	<link href="/static/css/seoulbitz.css?v=053104" rel="stylesheet" type="text/css" />
 
 	<!-- fullpage.js -->
 	<link href="/static/css/fullpage.css" rel="stylesheet" type="text/css" />
@@ -35,7 +35,7 @@
 <body>
 	<div id="fullpage">
 		
-		<div class="section">
+		<div class="section section-search">
 			<div class="col-lg-11 mb-4">
 				<h1 class="mt-4 mb-3">SeoulBitz Project</h1>
 				<!-- Content Row -->
@@ -52,7 +52,8 @@
 			</div>
 		</div>
 
-		<div class="section">
+		<div class="section section-map">
+			<div id="mask"></div>
 			<div class="row">
 				<div class="col-lg-1 mb-4 empty-div"></div>
 				<div class="col-lg-10 mb-4">
@@ -62,13 +63,12 @@
 			</div>
 		</div>
 
-		<div class="section fp-auto-height">
+		<div class="section section-insta fp-auto-height">
 			<div class="col-lg-12 mb-4">
 				<div id="insta-embed"></div>
 			</div>
 		</div>
 	</div> 
-
 	<script>
 		$(document).ready(function() {
 			$('#fullpage').fullpage({
@@ -83,10 +83,6 @@
 				anchors:['search', 'kakaomap', 'insta'],
 				navigation : true,
 				navigationPosition: 'right',
-				// navigationTooltips: ['firstSlide', 'secondSlide'],
-				// showActiveTooltip: false,
-				// slidesNavigation: false,
-				// slidesNavPosition: 'bottom',
 
 				//Scrolling
 				css3: true,
@@ -99,11 +95,6 @@
 				easingcss3: 'ease',
 				loopBottom: true,
 				loopTop: false,
-				// loopHorizontal: true,
-				// continuousVertical: false,
-				// continuousHorizontal: false,
-				// scrollHorizontally: false,
-				// interlockedSlides: false,
 				dragAndMove: false,
 				offsetSections: false,
 				resetSliders: false,
@@ -155,7 +146,8 @@
 	</script>
 </body>
 
-<script type="text/javascript" src="/static/js/seoulbitz.js?v=053001"></script>
+<script type="text/javascript" src="/static/js/seoulbitz.js?v=053104"></script>
+
 <script>
 	init(centerLoc);
 </script>
