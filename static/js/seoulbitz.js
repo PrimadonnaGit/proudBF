@@ -132,6 +132,31 @@ function init(centerLoc) {
     } 
 }
 
+function getLocation() {
+    if (navigator.geolocation) { // GPS를 지원하면
+      navigator.geolocation.getCurrentPosition(function(position) {
+        var gpsX = position.coords.latitude
+        var gpsY = position.coords.longitude
+
+        var centerLoc = new kakao.maps.LatLng(gpsX, gpsY);
+        init(centerLoc);
+        map.panTo(centerLoc);
+
+      }, function(error) {
+        console.error(error);
+        init(centerLoc);
+        map.panTo(centerLoc);
+      }, {
+        enableHighAccuracy: false,
+        maximumAge: 0,
+        timeout: Infinity
+      });
+    } else {
+      console.log('GPS를 지원하지 않습니다');
+    }
+  }
+
+
 function subwaySearch(query) {
     var query = query.replace('역','');
     $.get('/static/subway.json', function(data){
