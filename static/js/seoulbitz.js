@@ -1,7 +1,10 @@
 var infowindowArray = [];
 var markers = [];
+var subways = new Set();
+var subwayData;
 var centerLoc = new kakao.maps.LatLng(37.5065591, 127.018721);
 var imageSize = new kakao.maps.Size(24, 35);
+
 
 // 마커 이미지
 var imageSrc = "https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/markerStar.png";
@@ -50,7 +53,6 @@ $.get("/static/seoulbitz.json", function(data){
             insta_embed.append(content);
 
         });
-
         return marker
     });
     
@@ -156,18 +158,54 @@ function getLocation() {
     }
   }
 
+function getSubwayList(){
+    $.get('/static/subway.json', function(data){
+        subwayData = data.DATA;
+        $.each(data.DATA, function(i,d) {
+            subways.add(d.station_nm);
+        });
+        subways = Array.from(subways); 
+        subwayAutoCompelete();
+    });
+
+    
+}
+
+
+function subwayAutoCompelete(){
+    $('#subway_input').autocomplete({
+        source : subways,
+        select : function(e, ui){
+            subwaySearch(ui.item.value);
+        },
+        focus : function(e, ui){
+            return false;
+        },
+        minLength: 1,
+        autoFocus: true,
+        classes:{
+            "ui-autocomplete": "highlight"
+        },
+        delay: 500,
+        disabled: false,
+        position: {
+            my : "right top",
+            at : "right bottom"
+        },
+        close : function(e){
+        }
+    });
+}
 
 function subwaySearch(query) {
     var query = query.replace('역','');
-    $.get('/static/subway.json', function(data){
-        $.each(data.DATA, function(i,d) {
-            if (data.DATA[i].station_nm == query){
-                var centerLoc = new kakao.maps.LatLng(data.DATA[i].xpoint_wgs, data.DATA[i].ypoint_wgs);
-                panTo(centerLoc);
-                init(centerLoc);
-                fullpage_api.moveTo(2);
-            }
-        })
+    $.each(subwayData, function(i,d) {
+        if (subwayData[i].station_nm == query){
+            var centerLoc = new kakao.maps.LatLng(subwayData[i].xpoint_wgs, subwayData[i].ypoint_wgs);
+            panTo(centerLoc);
+            init(centerLoc);
+            fullpage_api.moveTo(2);
+        };
     });
 }
 

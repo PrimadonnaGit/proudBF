@@ -5,14 +5,25 @@
 	<meta charset="utf-8">
 	<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+	<!-- favicon -->
+	<link rel="apple-touch-icon" sizes="180x180" href="/static/apple-touch-icon.png">
+	<link rel="icon" type="image/png" sizes="32x32" href="/static/favicon-32x32.png">
+	<link rel="icon" type="image/png" sizes="16x16" href="/static/favicon-16x16.png">
+	<link rel="manifest" href="/static/site.webmanifest">
+
 	<title>Seoul Bitz</title>
 
 	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css"
 		integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
 
-	<script src="/static/jquery/jquery-3.3.1.min.js"></script>
-	<script src="/static/jquery/plugins/jquery.cookie.js"></script>
+	<!-- <script src="/static/jquery/jquery-3.3.1.min.js"></script> -->
+	<!-- <script src="/static/jquery/plugins/jquery.cookie.js"></script> -->
 
+	<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+	<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+	<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+	
+	
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js"
 		integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut"
 		crossorigin="anonymous"></script>
@@ -44,7 +55,7 @@
 					<div class="col-lg-2 mb-4">
 						<div id="subwaySearch">
 							<div class="searchbar">
-								<input class="search_input" type="text" name="" placeholder="지하철역 검색" onchange="subwaySearch(this.value);">
+								<input id="subway_input" class="search_input" type="text" name="" placeholder="지하철역 검색" onchange="subwaySearch(this.value);">
 							</div>
 						</div>
 					</div>
@@ -148,6 +159,7 @@
 
 <script type="text/javascript" src="/static/js/seoulbitz.js?v=053104"></script>
 <script>
+	getSubwayList()
 	getLocation();
 </script>
 
