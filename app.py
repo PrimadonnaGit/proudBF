@@ -12,7 +12,7 @@ photos = UploadSet('photos', IMAGES)
 app.config['UPLOADED_PHOTOS_DEST'] = 'static/img/uploads/'
 configure_uploads(app, photos)
 
-@app.route('/seoulbitz')
+@app.route('/')
 def index():
     return render_template('index.html')
 
