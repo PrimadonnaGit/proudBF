@@ -3,7 +3,7 @@ var markers = [];
 var subways = new Set();
 var subwayData;
 var centerLoc = new kakao.maps.LatLng(37.5065591, 127.018721);
-var imageSize = new kakao.maps.Size(24, 35);
+var imageSize = new kakao.maps.Size(30, 30);
 
 
 // 마커 이미지
