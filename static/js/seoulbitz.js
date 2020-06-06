@@ -36,9 +36,33 @@ var clusterer = new kakao.maps.MarkerClusterer({
     minLevel: 5 // 클러스터 할 최소 지도 레벨 
 });
 
-
-$.get("/static/seoulbitz.json", function(data){
+// Foodie items
+$.get("/static/data/seoulbitz_foodie.json", function(data){
     var markers = $(data).map(function(i, d) {
+        var marker = new kakao.maps.Marker({
+            position: new kakao.maps.LatLng(d.Y, d.X), // 마커를 표시할 위치
+            image: markerImage, // 마커 이미지
+            clickable: true // 마커를 클릭했을 때 지도의 클릭 이벤트가 발생하지 않도록 설정합니다
+        });
+        
+        // 마커에 클릭이벤트 등록
+        kakao.maps.event.addListener(marker, 'click', function () {
+            var content = makeInfoWindowContent(d.insta);
+            var insta_embed = document.getElementById('insta-embed');
+            while (insta_embed.firstChild) insta_embed.removeChild(insta_embed.firstChild);
+            insta_embed.append(content);
+
+        });
+        return marker
+    });
+    
+    clusterer.addMarkers(markers)
+})
+
+// Shopping items
+$.get("/static/data/seoulbitz_shopping.json", function(data){
+    var markers = $(data).map(function(i, d) {
+        console.log(d)
         var marker = new kakao.maps.Marker({
             position: new kakao.maps.LatLng(d.Y, d.X), // 마커를 표시할 위치
             image: markerImage, // 마커 이미지
@@ -159,7 +183,7 @@ function getLocation() {
   }
 
 function getSubwayList(){
-    $.get('/static/subway.json', function(data){
+    $.get('/static/data/subway.json', function(data){
         subwayData = data.DATA;
         $.each(data.DATA, function(i,d) {
             subways.add(d.station_nm);
