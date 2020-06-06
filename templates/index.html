@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+	<!-- favicon -->
+	<link rel="apple-touch-icon" sizes="180x180" href="/static/apple-touch-icon.png">
+	<link rel="icon" type="image/png" sizes="32x32" href="/static/favicon-32x32.png">
+	<link rel="icon" type="image/png" sizes="16x16" href="/static/favicon-16x16.png">
+	<link rel="manifest" href="/static/site.webmanifest">
+
+	<title>Seoul Bitz</title>
+
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css"
+		integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
+
+	<!-- <script src="/static/jquery/jquery-3.3.1.min.js"></script> -->
+	<!-- <script src="/static/jquery/plugins/jquery.cookie.js"></script> -->
+
+	<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+	<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+	<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+	
+	
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js"
+		integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut"
+		crossorigin="anonymous"></script>
+
+	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js"
+		integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k"
+		crossorigin="anonymous"></script>
+	<script type="text/javascript"
+		src="//dapi.kakao.com/v2/maps/sdk.js?appkey=cc116147fce20da7314166dce21f0305&libraries=services,clusterer"></script>
+		
+	<!-- custom js/css -->
+	<link href="/static/css/seoulbitz.css?v=053104" rel="stylesheet" type="text/css" />
+
+	<!-- fullpage.js -->
+	<link href="/static/css/fullpage.css" rel="stylesheet" type="text/css" />
+	<script type="text/javascript" src="/static/js/fullpage.js"></script>
+
+</head>
+
+<body>
+	<div id="fullpage">
+		
+		<div class="section section-search">
+			<div class="col-lg-11 mb-4">
+				<h1 class="mt-4 mb-3">SeoulBitz Project</h1>
+				<!-- Content Row -->
+				<div class="row">
+					<!-- Sidebar Column -->
+					<div class="col-lg-2 mb-4">
+						<div id="subwaySearch">
+							<div class="searchbar">
+								<input id="subway_input" class="search_input" type="text" name="" placeholder="지하철역 검색" onchange="subwaySearch(this.value);">
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="section section-map">
+			<div id="mask"></div>
+			<div class="row">
+				<div class="col-lg-1 mb-4 empty-div"></div>
+				<div class="col-lg-10 mb-4">
+					<div id="map"></div>
+				</div>
+				<div class="col-lg-1 mb-4"></div>
+			</div>
+		</div>
+
+		<div class="section section-insta fp-auto-height">
+			<div class="col-lg-12 mb-4">
+				<div id="insta-embed"></div>
+			</div>
+		</div>
+	</div> 
+	<script>
+		$(document).ready(function() {
+			$('#fullpage').fullpage({
+				//options here
+				licenseKey: 'C885127B-8F4A44C3-86E101C7-732B3D20',
+				autoScrolling:true,
+				scrollHorizontally: true,
+
+				//Navigation
+				menu: '#menu',
+				lockAnchors: false,
+				anchors:['search', 'kakaomap', 'insta'],
+				navigation : true,
+				navigationPosition: 'right',
+
+				//Scrolling
+				css3: true,
+				scrollingSpeed: 700,
+				autoScrolling: true,
+				fitToSection: true,
+				fitToSectionDelay: 1000,
+				scrollBar: false,
+				easing: 'easeInOutCubic',
+				easingcss3: 'ease',
+				loopBottom: true,
+				loopTop: false,
+				dragAndMove: false,
+				offsetSections: false,
+				resetSliders: false,
+				fadingEffect: false,
+				normalScrollElements: '#map',
+				scrollOverflow: false,
+				scrollOverflowReset: false,
+				scrollOverflowOptions: null,
+				touchSensitivity: 15,
+				bigSectionsDestination: null,
+
+				//Accessibility
+				keyboardScrolling: true,
+				animateAnchor: true,
+				recordHistory: true,
+
+				//Design
+				controlArrows: true,
+				verticalCentered: true,
+				sectionsColor : ['whitesmoke', 'white', 'whitesmoke'],
+				paddingTop: '3em',
+				paddingBottom: '10px',
+				fixedElements: '#header, .footer',
+				responsiveWidth: 0,
+				responsiveHeight: 0,
+				responsiveSlides: false,
+				parallax: false,
+				parallaxOptions: {type: 'reveal', percentage: 62, property: 'translate'},
+				cards: false,
+				cardsOptions: {perspective: 100, fadeContent: true, fadeBackground: true},
+
+				//Custom selectors
+				sectionSelector: '.section',
+				slideSelector: '.slide',
+
+				lazyLoading: true,
+
+				//events
+				onLeave: function(origin, destination, direction){},
+				afterLoad: function(origin, destination, direction){},
+				afterRender: function(){},
+				afterResize: function(width, height){},
+				afterReBuild: function(){},
+				afterResponsive: function(isResponsive){},
+				afterSlideLoad: function(section, origin, destination, direction){},
+				onSlideLeave: function(section, origin, destination, direction){}
+				});
+		});
+	</script>
+</body>
+
+<script type="text/javascript" src="/static/js/seoulbitz.js?v=053104"></script>
+<script>
+	getSubwayList()
+	getLocation();
+</script>
+
+</html>
