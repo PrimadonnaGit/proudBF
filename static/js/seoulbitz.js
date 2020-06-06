@@ -8,11 +8,16 @@ var imageSize = new kakao.maps.Size(24, 35);
 
 // 마커 이미지
 var imageSrc = "https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/markerStar.png";
-var centerImageSrc = "/static/img/pin.png";
+var centerImageSrc = "/static/img/pin_red.png";
+var foodieImageSrc = "/static/img/pin_blue.png";
+var shoppingImageSrc = "/static/img/pin_orange.png";
 
 // 마커 이미지를 생성합니다    
 var markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize);
 var centerMarkerImage = new kakao.maps.MarkerImage(centerImageSrc, imageSize);
+var foodieMarkerImage = new kakao.maps.MarkerImage(foodieImageSrc, imageSize);
+var shoppingMarkerImage = new kakao.maps.MarkerImage(shoppingImageSrc, imageSize);
+
 
 var mapContainer = document.getElementById('map'), // 지도를 표시할 div 
     mapOption = {
@@ -41,7 +46,7 @@ $.get("/static/data/seoulbitz_foodie.json", function(data){
     var markers = $(data).map(function(i, d) {
         var marker = new kakao.maps.Marker({
             position: new kakao.maps.LatLng(d.Y, d.X), // 마커를 표시할 위치
-            image: markerImage, // 마커 이미지
+            image: foodieMarkerImage, // 마커 이미지
             clickable: true // 마커를 클릭했을 때 지도의 클릭 이벤트가 발생하지 않도록 설정합니다
         });
         
@@ -65,7 +70,7 @@ $.get("/static/data/seoulbitz_shopping.json", function(data){
         console.log(d)
         var marker = new kakao.maps.Marker({
             position: new kakao.maps.LatLng(d.Y, d.X), // 마커를 표시할 위치
-            image: markerImage, // 마커 이미지
+            image: shoppingMarkerImage, // 마커 이미지
             clickable: true // 마커를 클릭했을 때 지도의 클릭 이벤트가 발생하지 않도록 설정합니다
         });
         
@@ -244,50 +249,5 @@ function wrapWindowByMask(){
     //애니메이션 효과
     $('#mask').fadeTo('fast',0.8);
 
-}
-
-//주소로 좌표 검색
-var addressSearch = function (data) {
-    // 주소-좌표 변환 객체를 생성합니다
-	var geocoder = new kakao.maps.services.Geocoder();
-	
-    geocoder.addressSearch(data.addr, function (result, status) {
-        // 정상적으로 검색이 완료됐으면 
-        if (status === kakao.maps.services.Status.OK) {
-
-            // 마커를 생성합니다
-            var marker = new kakao.maps.Marker({
-                map: map, // 마커를 표시할 지도
-                position: new kakao.maps.LatLng(result[0].y, result[0].x), // 마커를 표시할 위치
-                image: markerImage, // 마커 이미지
-                clickable: true // 마커를 클릭했을 때 지도의 클릭 이벤트가 발생하지 않도록 설정합니다
-            });
-
-            infowindowArray.push(infowindow);
-
-            // 마커에 mouseover 이벤트와 mouseout 이벤트를 등록합니다
-            // 이벤트 리스너로는 클로저를 만들어 등록합니다 
-            // for문에서 클로저를 만들어 주지 않으면 마지막 마커에만 이벤트가 등록됩니다
-            // kakao.maps.event.addListener(marker, 'mouseover', makeOverListener(map, marker, infowindow));
-            // kakao.maps.event.addListener(marker, 'mouseout', makeOutListener(infowindow));
-
-            // 마커에 표시할 인포윈도우를 생성합니다 
-            var infowindow = new kakao.maps.InfoWindow({
-                content: makeInfoWindowContent(data) // 인포윈도우에 표시할 내용
-            });
-            // 마커에 클릭이벤트 등록
-            kakao.maps.event.addListener(marker, 'click', function () {
-                closeInfoWindow(infowindowArray);
-                // 마커 위에 인포윈도우를 표시합니다
-                infowindow.open(map, marker);
-            });
-
-            // 맵에 클릭이벤트 등록
-            kakao.maps.event.addListener(map, 'click', function () {
-                // 마커 위에 인포윈도우를 표시합니다
-                infowindow.close();
-            });
-        }
-    })
 }
 
