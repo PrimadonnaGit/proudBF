@@ -16,6 +16,11 @@
   background-color: currentColor!important;
 }
 
+.section.section-insta {
+  padding : 0;
+  background-color: currentColor!important;
+}
+
 h1 {
   color : white;
 }

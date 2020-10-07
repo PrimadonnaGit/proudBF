@@ -14,10 +14,10 @@ headers = {
     'Authorization' : 'KakaoAK cc116147fce20da7314166dce21f0305'
 }
 
-data = load_csv('seoulbitz_shopping.csv')
+data = load_csv('1007.csv')
 
 for i, d in enumerate(data):
-    title, address, like, insta, img, tag = d
+    title, tag, address, _, like, insta, img, timestamp = d
 
     data = {
         "query" : address
@@ -38,6 +38,6 @@ for i, d in enumerate(data):
         print(title, address, resJson)
         y,x = 0,0
     finally:
-        with open('seoulbitz_shopping(06_06).csv', 'a', newline='', encoding='cp949') as f:
+        with open('1007_f.csv', 'a', newline='', encoding='cp949') as f:
             writer = csv.writer(f)
             writer.writerow([i, title , y, x, tag, address, like, insta, img])

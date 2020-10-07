@@ -45,7 +45,7 @@ var clusterer = new kakao.maps.MarkerClusterer({
 $.get("/static/data/seoulbitz_foodie.json", function(data){
     var markers = $(data).map(function(i, d) {
         var marker = new kakao.maps.Marker({
-            position: new kakao.maps.LatLng(d.Y, d.X), // 마커를 표시할 위치
+            position: new kakao.maps.LatLng(d.y, d.x), // 마커를 표시할 위치
             image: foodieMarkerImage, // 마커 이미지
             clickable: true // 마커를 클릭했을 때 지도의 클릭 이벤트가 발생하지 않도록 설정합니다
         });
@@ -67,9 +67,8 @@ $.get("/static/data/seoulbitz_foodie.json", function(data){
 // Shopping items
 $.get("/static/data/seoulbitz_shopping.json", function(data){
     var markers = $(data).map(function(i, d) {
-        console.log(d)
         var marker = new kakao.maps.Marker({
-            position: new kakao.maps.LatLng(d.Y, d.X), // 마커를 표시할 위치
+            position: new kakao.maps.LatLng(d.y, d.x), // 마커를 표시할 위치
             image: shoppingMarkerImage, // 마커 이미지
             clickable: true // 마커를 클릭했을 때 지도의 클릭 이벤트가 발생하지 않도록 설정합니다
         });
