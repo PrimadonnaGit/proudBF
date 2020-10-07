@@ -5,6 +5,31 @@
 ##Screen = 1281px 이상 해상도 데스크탑
 */
 
+.section.section-search {
+  padding : 0;
+  background-image: url(../img/bg1.jpg);
+  background-size: cover;
+}
+
+.section.section-map {
+  padding : 0;
+  background-color: currentColor!important;
+}
+
+h1 {
+  color : white;
+}
+
+.search_input {
+  border: none;
+  padding: 1%;
+}
+
+.search_input:focus {
+  outline: none;
+  border-bottom: 2px solid yellowgreen;
+}
+
 @media (min-width: 1281px) {
     .container {
         max-width: 1540px;
@@ -26,18 +51,6 @@
 
     .searchbar {
         margin : 10px;
-    }
-
-    .search_input {
-        border: none;
-        border-bottom: 2px solid yellowgreen;
-        
-    }
-
-    .search_input:focus {
-        outline: none;
-        border: none;
-        border-bottom: 2px solid yellowgreen;
     }
 
     #insta-embed {
@@ -76,16 +89,7 @@
         margin : 10px;
     }
 
-    .search_input {
-        border: none;
-        border-bottom: 2px solid yellowgreen;
-    }
 
-    .search_input:focus {
-        outline: none;
-        border: none;
-        border-bottom: 2px solid yellowgreen;
-    }
 
     #insta-embed {
         text-align: center;
@@ -122,16 +126,7 @@
         margin : 10px;
     }
 
-    .search_input {
-        border: none;
-        border-bottom: 2px solid yellowgreen;
-    }
 
-    .search_input:focus {
-        outline: none;
-        border: none;
-        border-bottom: 2px solid yellowgreen;
-    }
 
     #insta-embed {
         text-align: center;
@@ -168,16 +163,7 @@
         margin : 10px;
     }
 
-    .search_input {
-        border: none;
-        border-bottom: 2px solid yellowgreen;
-    }
 
-    .search_input:focus {
-        outline: none;
-        border: none;
-        border-bottom: 2px solid yellowgreen;
-    }
     #insta-embed {
         text-align: center;
     }
@@ -213,16 +199,7 @@
         margin : 10px;
     }
 
-    .search_input {
-        border: none;
-        border-bottom: 2px solid yellowgreen;
-    }
 
-    .search_input:focus {
-        outline: none;
-        border: none;
-        border-bottom: 2px solid yellowgreen;
-    }
 
     #insta-embed {
         text-align: center;
@@ -259,16 +236,7 @@
         margin : 10px;
     }
 
-    .search_input {
-        border: none;
-        border-bottom: 2px solid yellowgreen;
-    }
 
-    .search_input:focus {
-        outline: none;
-        border: none;
-        border-bottom: 2px solid yellowgreen;
-    }
     #insta-embed {
         text-align: center;
     }
@@ -298,16 +266,7 @@
         margin : 10px;
     }
 
-    .search_input {
-        border: none;
-        border-bottom: 2px solid yellowgreen;
-    }
 
-    .search_input:focus {
-        outline: none;
-        border: none;
-        border-bottom: 2px solid yellowgreen;
-    }
     #insta-embed {
         text-align: center;
     }
@@ -343,16 +302,7 @@
         margin : 10px;
     }
 
-    .search_input {
-        border: none;
-        border-bottom: 2px solid yellowgreen;
-    }
 
-    .search_input:focus {
-        outline: none;
-        border: none;
-        border-bottom: 2px solid yellowgreen;
-    }
 
     #insta-embed {
         text-align: center;
