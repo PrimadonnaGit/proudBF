@@ -10,6 +10,17 @@ import requests
 import pandas as pd
 
 
+def load_csv(filename):
+    data = []
+    with open(filename, encoding='utf-8') as f:
+        reader = csv.reader(f)
+        for r in reader:
+            data.append(r)
+    return data
+
+def deleteUnicode(text):
+    return text.replace('\u200b','').replace('\u2063','')
+
 class InstagramScrap():
     def __init__(self, instaID=None, tag=None):
         self.baseUrl = 'https://www.instagram.com/' + (instaID if tag is None else 'explore/tags/' + tag + '?hl=ko')
@@ -22,7 +33,7 @@ class InstagramScrap():
         self.driver = webdriver.WebDriver('driver/chromedriver_85_win32.exe')
 
     # scorlling slowly by speed
-    def scrolling(self, speed=15):
+    def scrolling(self, speed=30):
         current_scroll_position, new_height= 0, 1
         while current_scroll_position <= new_height:
             current_scroll_position += speed
@@ -41,8 +52,8 @@ class InstagramScrap():
     # Update Contents
     def scrollToBottom(self):
         soupList = []
-        speed = 1001
-        new_height = 1001
+        speed = 1000
+        new_height = 1
         current_scroll_position = 0
         while current_scroll_position <= new_height:
             current_scroll_position += speed
@@ -55,8 +66,10 @@ class InstagramScrap():
 
     def getContents(self):
         self.driver.get(self.baseUrl)
-        self.login()
-
+        try:
+            self.login()
+        except:
+            pass
         soupList = self.scrollToBottom()
 
         hrefs = []
@@ -67,37 +80,52 @@ class InstagramScrap():
         return list(set(hrefs))
 
     def getContent(self, href):
-        instaID_tag = 'article > header > div > div > div > span > a'
+        # instaID_tag = 'article > header > div > div > div > span > a'
         content_tag = 'article > div > div > ul > div > li > div > div > div > span'
         like_tag = 'article > div > section > div > div > button > span'
         img_tag = 'article > div > div > div > div > div > div > div > ul > li > div > div > div > div > div > img'
         sub_img_tag = 'article > div > div > div > div > div > div > div > ul > li > div > div > div > div > img'
         timestamp_tag = 'article > div> div > a > time'
-
         contentUrl = 'https://www.instagram.com/' + href
+        
         self.driver.get(contentUrl)
-        soup = BeautifulSoup(self.driver.page_source, 'html.parser')
+        time.sleep(1)
+        soup = BeautifulSoup(self.driver.page_source, 'html.parser')           
+        try:
+            # print(soup.select_one(instaID_tag))
+            # if not soup.select_one(instaID_tag).text in ['seoulbitz','seoulbitz_archive']:
+            #     return -1
 
-        if not soup.select_one(instaID_tag).text in ['seoulbitz','seoulbitz_archive']:
-            return -1
+            content = soup.select_one(content_tag)
+            like = int(soup.select_one(like_tag).text)
 
-        content = soup.select_one(content_tag)
-        like = int(soup.select_one(like_tag).text)
+            imgs = []
+            
+            # Thumbnail
+            img = soup.select_one(img_tag)
+            subImgs = [i['src'] for i in soup.select(sub_img_tag)]
+            # print(img,subImgs)
+            if img == None:
+                # SubImages
+                imgs += subImgs
+            else:
+                imgs.append(img['src'])
+                imgs += subImgs
+            
+            # print(imgs)
+            timestamp = soup.select_one(timestamp_tag)['title']
 
-        img = soup.select_one(img_tag)
-        if img == None:
-            img = soup.select_one(sub_img_tag)
-        img = img['src']
-        timestamp = soup.select_one(timestamp_tag)['title']
-
-        # clean html tags
-        clean_html = re.compile('<.*?>')
-        content = [re.sub(clean_html, '', text) if text.startswith('<') else text for text in str(content).split('<br/>')]
-
-        for i, text in enumerate(content):
-            hanCount = len(re.findall(u'[\u3130-\u318F\uAC00-\uD7A3]+', text))
-            if hanCount > 0:
-                return content, img, i, like, timestamp
+            # clean html tags
+            clean_html = re.compile('<.*?>')
+            content = [re.sub(clean_html, '', text) if text.startswith('<') else text for text in str(content).split('<br/>')]
+            # print(content)
+            for i, text in enumerate(content):
+                hanCount = len(re.findall(u'[\u3130-\u318F\uAC00-\uD7A3]+', text))
+                if hanCount > 0:
+                    return content, imgs, i, like, timestamp
+        except Exception as e:
+            print(e)
+            
 
 class KakaoAPI():
 
@@ -135,6 +163,36 @@ class KakaoAPI():
             #road_address_name = d['road_address_name']
         return addresslist[0] if len(addresslist) else ''
 
+    def getXY(self):
+        self.host = "http://dapi.kakao.com/v2/local/search/address.json"
+
+        data = load_csv('output_naver.csv')
+
+        for i, d in enumerate(data):
+            title, tag, address, _, like, insta, img, timestamp = d
+
+            data = {
+                "query" : address
+            }
+
+            res = requests.get(self.host, params=data, headers=self.header)
+
+            resJson = res.json()
+            try:
+                a = resJson['documents'][0]
+
+                try:
+                    y,x = a['address']['y'], a['address']['x']
+                except:
+                    y,x = a['road_address']['y'], a['road_address']['x']
+
+            except:
+                y,x = 0,0
+            finally:
+                with open('output_final.csv', 'a', newline='', encoding='utf-8') as f:
+                    writer = csv.writer(f)
+                    writer.writerow([i, title , y, x, tag, address, like, insta, img])
+
 class NaverAPI():
 
     def __init__(self):
@@ -161,31 +219,23 @@ class NaverAPI():
 
             if resJson['total'] > 0:
                 for item in resJson['items']:
+                    # 서울내, location이 들어있을때 우선순위,
                     if location in item['address'] and '서울' in item['address']:
                         addressList.append((item['address'], item['category']))
-                    
+                
+                # 주소가 여러개면 첫번째것을 고름
                 if len(addressList):
                     address_full, category = addressList[0]
+                # location과 일치하지 않을경우
                 else:
-                    address_full, category = '', ''
+                    address_full, category = resJson['items'][0]['address'],resJson['items'][0]['category']
+            # 결과가 없을 경우
             else:
-                address_full, category = '', ''
+                address_full, category = 'empty', 'empty'
 
-            with open('output_naver.csv', 'a', newline='', encoding='cp949') as f:
+            with open('output_naver.csv', 'a', newline='', encoding='utf-8') as f:
                 writer = csv.writer(f)
                 writer.writerow([query, location, address_full, category, like, insta, img, timestamp])
-
-
-def load_csv(filename):
-    data = []
-    with open(filename) as f:
-        reader = csv.reader(f)
-        for r in reader:
-            data.append(r)
-    return data
-
-def deleteUnicode(text):
-    return text.replace('\u200b','').replace('\u2063','')
 
 if __name__ == '__main__':
 
@@ -202,7 +252,9 @@ if __name__ == '__main__':
     for i, href in enumerate(uniqueHref):
         print('[{}/{}]'.format(i+1,len(uniqueHref)))
         try:
-            content, img, kr_idx, like, timestamp = scraper.getContent(href)
+            content, imgs, kr_idx, like, timestamp = scraper.getContent(href)
+            
+            
 
             if tag == 'seoulbitz_shopping':
                 # 한글상호명 / 위치
@@ -215,33 +267,35 @@ if __name__ == '__main__':
                     loc = '서울'
                     
             else:
-                title, loc = [x.strip().replace(',','').replace('\u200b','').replace('\u2063','') for x in content[kr_idx].split('/')]
-        except:
-            print("Failed",i, href)
+                try:
+                    title, loc = [x.strip().replace(',','').replace('\u200b','').replace('\u2063','') for x in content[kr_idx].split('/')]
+                except:
+                    title = [x.strip().replace(',','').replace('\u200b','').replace('\u2063','') for x in content[kr_idx].split('/')][0]
+                    loc = '서울'
+                    
+        except Exception as e:
+            print("Failed", e, href)
             continue
 
-        with open('output.csv', 'a', newline='', encoding='cp949') as f:
+        with open('output.csv', 'a', newline='', encoding='utf-8') as f:
             writer = csv.writer(f)
-            writer.writerow([title , loc, like, 'https://www.instagram.com' + href, img, timestamp])
+            writer.writerow([title , loc, like, 'https://www.instagram.com' + href, ','.join(imgs), timestamp])
 
     scraper.driver.quit()
 
-    # KAKAO
     print('Finding Address ...')
-    # data = load_csv('output.csv')
-    # api = Kakaoapi()
- 
-    # for d in data:
-    #     query, location, like, insta, img = d
-    #     address = api.keyword_req(query, location)
 
-    #     with open('output_kakao.csv', 'a', newline='', encoding='cp949') as f:
-    #         writer = csv.writer(f)
-    #         writer.writerow([query,location,address, like, insta, img])
-
-    # NAVER
+    # NAVER get address
     naverAPI = NaverAPI()
     naverAPI.keyword_req()
+    
+    print('Finding lat&long ...')
+
+    # KAKAO get lat,log
+    kakaoAPI = KakaoAPI()
+    kakaoAPI.getXY()
+    
+    # replace " to empty
 
 
 
