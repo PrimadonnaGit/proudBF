@@ -9,11 +9,21 @@ import requests
 import pandas as pd
 from bs4 import BeautifulSoup
 
+recent_images_tag = "article > div:nth-of-type(2) > div > div > div > a"
+instaID_tag = 'article > header > div > div > div a'
+content_tag = 'article > div > div > ul > div > li > div > div > div > span'
+like_tag = 'article > div > section > div > div > button > span'
+img_tag = 'article > div > div > div > div > div > div > div > ul > li > div > div > div > div > div > img'
+sub_img_tag = 'article > div > div > div > div > div > div > div > ul > li > div > div > div > div > img'
+timestamp_tag = 'article > div> div > a > time'
+
+
 def deletePreviousCSV():
-  files = glob.glob('*.csv')
-  for file in files:
-      if os.path.isfile(file):
-          os.remove(file)
+    files = glob.glob('*.csv')
+    for file in files:
+        if os.path.isfile(file):
+            os.remove(file)
+
 
 def load_csv(filename):
     data = []
@@ -42,86 +52,96 @@ class InstagramScrap():
             os.path.dirname(__file__), 'driver/chromedriver_89_win32.exe'))
         self.debug = debug
 
-    # scorlling slowly by speed
-    # def scrolling(self, speed=30):
-    #     current_scroll_position, new_height = 0, 1
-    #     while current_scroll_position <= new_height:
-    #         current_scroll_position += speed
-    #         self.driver.execute_script(
-    #             "window.scrollTo(0, {});".format(current_scroll_position))
-    #         new_height = self.driver.execute_script(
-    #             "return document.body.scrollHeight")
+    # 로그인 화면이 떴을 경우
 
     def login(self):
         time.sleep(1.5)
         self.driver.find_element_by_css_selector(
             "input[name='username']").send_keys('01092141833')
         self.driver.find_element_by_css_selector(
-            "input[name='password']").send_keys('kbj2277!')
+            "input[name='password']").send_keys('KBJ2277!')
         self.driver.find_elements_by_tag_name("button")[1].click()
         time.sleep(3)
         self.driver.find_elements_by_tag_name("button")[1].click()
+        time.sleep(3)
+        self.driver.get(self.baseUrl)
 
     # Update Contents
 
     def scrollToBottom(self):
-        soupList = []
+
         speed = 1000
         new_height = 1
+        max_result = 1000
+
+        soupList = []
         current_scroll_position = 0
         while current_scroll_position <= new_height:
             current_scroll_position += speed
             self.driver.execute_script(
                 "window.scrollTo(0, document.body.scrollHeight);")
-            time.sleep(2)
+            time.sleep(5)
             new_height = self.driver.execute_script(
                 "return document.body.scrollHeight")
             soupList.append(BeautifulSoup(
                 self.driver.page_source, 'html.parser'))
+            if len(soupList) > max_result:
+                print(len(soupList))
+                break
 
         return soupList
 
+    # 리스트 페이지 크롤링
+
     def getContents(self):
+
         self.driver.get(self.baseUrl)
         try:
+            # 로그인 페이지
             self.login()
         except:
+            # 프리패스
             pass
         soupList = self.scrollToBottom()
 
         hrefs = []
         for soup in soupList:
-            for x in soup.select('article > div > div > div > div > a'):
+            for x in soup.select(recent_images_tag):
                 hrefs.append(x['href'])
 
         return list(set(hrefs))
 
+    # 상세 페이지 크롤링
     def getContent(self, href):
-        instaID_tag = 'article > header > div > div > div > a'
-        content_tag = 'article > div > div > ul > div > li > div > div > div > span'
-        like_tag = 'article > div > section > div > div > button > span'
-        img_tag = 'article > div > div > div > div > div > div > div > ul > li > div > div > div > div > div > img'
-        sub_img_tag = 'article > div > div > div > div > div > div > div > ul > li > div > div > div > div > img'
-        timestamp_tag = 'article > div> div > a > time'
-        contentUrl = 'https://www.instagram.com/' + href
-
-        self.driver.get(contentUrl)
+        self.driver.get('https://www.instagram.com/' + href)
         time.sleep(1)
+        try:
+            # 로그인 페이지
+            self.login()
+        except:
+            # 프리패스
+            pass
+
         soup = BeautifulSoup(self.driver.page_source, 'html.parser')
         try:
-            print(soup.select_one(instaID_tag))
-            if not soup.select_one(instaID_tag).text == 'seoulbitz_archive':
-                return -1
-
-            content = soup.select_one(content_tag)
 
             try:
-              like = int(soup.select_one(like_tag).text)
+                if not soup.select_one(instaID_tag).text == 'seoulbitz':
+                    return -1
             except:
-              like = 0
+                pass
 
+            # 내용
+            content = soup.select_one(content_tag)
+
+            # 좋아요
+            try:
+                like = int(soup.select_one(like_tag).text)
+            except:
+                like = 0
+
+            # 이미지
             imgs = []
-
             # Thumbnail
             img = soup.select_one(img_tag)
             subImgs = [i['src'] for i in soup.select(sub_img_tag)]
@@ -133,20 +153,21 @@ class InstagramScrap():
                 imgs.append(img['src'])
                 imgs += subImgs
 
-            # print(imgs)
+            # 게시날짜
             timestamp = soup.select_one(timestamp_tag)['title']
 
             # clean html tags
             clean_html = re.compile('<.*?>')
-            content = [re.sub(clean_html, '', text) if text.startswith('<') else text for text in str(content).split('<br/>')]
+            content = [re.sub(clean_html, '', text) if text.startswith(
+                '<') else text for text in str(content).split('<br/>')]
             if self.debug:
-              print(content)
+                print(content)
             for i, text in enumerate(content):
                 hanCount = len(re.findall(
                     u'[\u3130-\u318F\uAC00-\uD7A3]+', text))
                 if hanCount > 0:
                     if self.debug:
-                      print(content, imgs, i, like, timestamp)
+                        print(content, imgs, i, like, timestamp)
                     return content, imgs, i, like, timestamp
         except Exception as e:
             print(e)
@@ -181,6 +202,7 @@ class KakaoAPI():
             if not loc in address_name:
                 continue
             else:
+                # loc 값이 주소에 들어 있다면
                 addresslist.append(address_name)
                 break
 
@@ -263,7 +285,7 @@ class NaverAPI():
             with open('output_naver.csv', 'a', newline='', encoding='utf-8') as f:
                 writer = csv.writer(f)
                 writer.writerow([query, location, address_full,
-                                category, like, insta, img, timestamp])
+                                 category, like, insta, img, timestamp])
 
 
 if __name__ == '__main__':
@@ -271,7 +293,7 @@ if __name__ == '__main__':
     deletePreviousCSV()
 
     search_tag = 'seoulbitz_foodie'
-    scraper = InstagramScrap(instaID='seoulbitz', tag=search_tag, debug=True)
+    scraper = InstagramScrap(instaID='seoulbitz', tag=search_tag, debug=False)
     uniqueHref = scraper.getContents()
 
     print('Get Instagram ...')
