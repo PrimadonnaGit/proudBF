@@ -126,9 +126,10 @@ class InstagramScrap():
         try:
 
             try:
-                if not soup.select_one(instaID_tag).text == 'seoulbitz':
+                if not soup.select_one(instaID_tag).text in ['seoulbitz', 'seoulbitz_archive']:
                     return -1
-            except:
+            except Exception as e:
+                print("[Warning] failed to get instaID")
                 pass
 
             # 내용
@@ -137,29 +138,37 @@ class InstagramScrap():
             # 좋아요
             try:
                 like = int(soup.select_one(like_tag).text)
-            except:
+            except Exception as e:
+                print("[Warning] failed to get like")
                 like = 0
 
-            # 이미지
-            imgs = []
-            # Thumbnail
-            img = soup.select_one(img_tag)
-            subImgs = [i['src'] for i in soup.select(sub_img_tag)]
-            # print(img,subImgs)
-            if img == None:
-                # SubImages
-                imgs += subImgs
-            else:
-                imgs.append(img['src'])
-                imgs += subImgs
+            try:
+                # 이미지
+                imgs = []
+                # Thumbnail
+                img = soup.select_one(img_tag)
+                subImgs = [i['src'] for i in soup.select(sub_img_tag)]
+                # print(img,subImgs)
+                if img == None:
+                    # SubImages
+                    imgs += subImgs
+                else:
+                    imgs.append(img['src'])
+                    imgs += subImgs
+            except Exception as e:
+                print("[Error] failed to get images")
 
-            # 게시날짜
-            timestamp = soup.select_one(timestamp_tag)['title']
+            try:
+                # 게시날짜
+                timestamp = soup.select_one(timestamp_tag)['title']
+            except Exception as e:
+                print("[Warning] failed to get timestamp")
 
             # clean html tags
             clean_html = re.compile('<.*?>')
             content = [re.sub(clean_html, '', text) if text.startswith(
                 '<') else text for text in str(content).split('<br/>')]
+
             if self.debug:
                 print(content)
             for i, text in enumerate(content):
@@ -170,7 +179,7 @@ class InstagramScrap():
                         print(content, imgs, i, like, timestamp)
                     return content, imgs, i, like, timestamp
         except Exception as e:
-            print(e)
+            print(f"Failed detail objects ", e)
 
 
 class KakaoAPI():
@@ -297,8 +306,9 @@ if __name__ == '__main__':
     uniqueHref = scraper.getContents()
 
     print('Get Instagram ...')
+    title_seen = []
     for i, href in enumerate(uniqueHref):
-        print('[{}/{}]'.format(i+1, len(uniqueHref)))
+        print(f'[{i+1}/{len(uniqueHref)}] {href}')
         try:
             content, imgs, kr_idx, like, timestamp = scraper.getContent(href)
 
@@ -309,7 +319,8 @@ if __name__ == '__main__':
                     title, loc = [deleteUnicode(x.strip().replace(
                         ',', '')) for x in content[kr_idx].split('/')]
                 # 상호명
-                except:
+                except Exception as e:
+                    print(f"Except {e} Content {content}")
                     title = deleteUnicode(content[kr_idx].strip())
                     loc = '서울'
 
@@ -317,10 +328,16 @@ if __name__ == '__main__':
                 try:
                     title, loc = [x.strip().replace(',', '').replace('\u200b', '').replace(
                         '\u2063', '') for x in content[kr_idx].split('/')]
-                except:
+                except Exception as e:
+                    print(f"Except {e} Content {content}")
                     title = [x.strip().replace(',', '').replace('\u200b', '').replace(
                         '\u2063', '') for x in content[kr_idx].split('/')][0]
                     loc = '서울'
+
+            if title in title_seen:
+                print("Seen Before", title)
+                continue
+            title_seen.append(title)
 
         except Exception as e:
             print("Failed", e, href)
